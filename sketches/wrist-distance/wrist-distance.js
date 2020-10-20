@@ -1,12 +1,9 @@
 // @ts-nocheck
 
-// Setup all nodes
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioCtx = new AudioContext();    
-
-// load some sound
-const audioElement = document.querySelector('#zymbel');
-const track = audioCtx.createMediaElementSource(audioElement);
+// get elements
+let video = document.getElementById("video");
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 
 // sets up a bodystream with configuration object
 const bodies = new BodyStream ({
@@ -33,50 +30,8 @@ bodies.addEventListener('bodiesDetected', (e) => {
 })
 
 
-document.querySelector('button').addEventListener('click', function() {
-        audioCtx.resume().then(() => {
-        console.log("I am playing!");
-        audioElement.play();
-    });
-});
-
-//playButton.dataset.playing = false;
-/*setInterval(()=>{
-    if(audioCtx === 'suspended'){
-        audioCtx.resume();
-    }*/
-//
-
-/* ----- setup ------ 
-// volume
-const gainNode = audioCtx.createGain();
-
-const volumeControl = document.querySelector('#volume');
-volumeControl.addEventListener('input', function() {
-gainNode.gain.value = this.value;
-}, false);
-
-// panning
-const pannerOptions = {pan: 0};
-const panner = new StereoPannerNode(audioCtx, pannerOptions);
-
-const pannerControl = document.querySelector('#panner');
-pannerControl.addEventListener('input', function() {
-panner.pan.value = this.value;	
-}, false);
-
-// connect our graph
-track.connect(gainNode).connect(panner).connect(audioCtx.destination);*/
 
 
-
-
-
-
-// get elements
-let video = document.getElementById("video");
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
 
 // draw the video, nose and eyes into the canvas
 function drawCameraIntoCanvas() {
@@ -110,9 +65,3 @@ function drawCameraIntoCanvas() {
 bodies.start()
 // draw video and body parts into canvas continously 
 drawCameraIntoCanvas();
-
-document.querySelector('button').addEventListener('click', function() {
-    audioCtx.resume().then(() => {
-      console.log('Playback resumed successfully');
-    });
-})

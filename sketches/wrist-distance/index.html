@@ -3,23 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Wrist distance</title>
-
+  <audio src="zymbel.mp3" type="audio/mpeg" loop id="zymbel"></audio>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
-  <script src= "https://unpkg.com/@reactivex/rxjs@6.6.3/dist/global/rxjs.umd.js"></script>
+  <script src="https://unpkg.com/@reactivex/rxjs@6.6.3/dist/global/rxjs.umd.js"></script>
   <script src="../../lib/bodydetection.js"></script>
 </head>
 
 <body>
   <canvas id="canvas" width="640" height="480"></canvas>
   <video id="video" width="640" height="480" autoplay style="display: none"></video>
-  <audio src="zymbel.mp3" type="audio/mpeg" autoplay id="zymbel"></audio>
+ 
   <div id="output"></div>
-  <button>allow audio</button>
-  <script>
-  // One-liner to resume playback when user interacted with the page.
-  </script>
-    <script src="wrist-distance.js"></script>
+  <button data-playing="false" role="switch" aria-checked="false" autoplay><span>Play/Pause</span></button>
+  <script src="audio.js"></script>
+  <script src="wrist-distance.js"></script>
 </body>
 
 </html>
