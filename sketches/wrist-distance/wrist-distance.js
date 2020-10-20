@@ -1,12 +1,13 @@
 // @ts-nocheck
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioCtx = new AudioContext();
-    // Setup all nodes
 
+// Setup all nodes
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();    
 
 // load some sound
 const audioElement = document.querySelector('#zymbel');
 const track = audioCtx.createMediaElementSource(audioElement);
+
 // sets up a bodystream with configuration object
 const bodies = new BodyStream ({
       posenet: posenet,
@@ -20,6 +21,9 @@ let distance;
 let prevValueIsWithinDistance = false;
 let currentValueIsWithinDistance = false;
 
+currentValueIsWithinDistance = (distance > 10 && distance < 100);
+
+
 bodies.addEventListener('bodiesDetected', (e) => {
     body = e.detail.bodies.getBodyAt(0)
     distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist))
@@ -29,17 +33,18 @@ bodies.addEventListener('bodiesDetected', (e) => {
 })
 
 
-currentValueIsWithinDistance = (distance > 10 && distance < 100);
+document.querySelector('button').addEventListener('click', function() {
+        audioCtx.resume().then(() => {
+        console.log("I am playing!");
+        audioElement.play();
+    });
+});
 
 //playButton.dataset.playing = false;
 /*setInterval(()=>{
     if(audioCtx === 'suspended'){
         audioCtx.resume();
     }*/
-    if(currentValueIsWithinDistance && prevValueIsWithinDistance){
-        console.log("I am playing!");
-        audioElement.play();
-    }
 //
 
 /* ----- setup ------ 
