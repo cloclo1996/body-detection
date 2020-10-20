@@ -1,9 +1,19 @@
 // @ts-nocheck
 
-// get elements
+//==========================================
+//              SETUP CANVAS
+//==========================================
 let video = document.getElementById("video");
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
+
+
+
+//==========================================
+//                 BODY
+//==========================================
+let body;
+let distance; //distance between wrists
 
 // sets up a bodystream with configuration object
 const bodies = new BodyStream ({
@@ -13,27 +23,23 @@ const bodies = new BodyStream ({
       videoElement: document.getElementById('video'), 
       samplingRate: 100})
     
-let body;
-let distance;
-let prevValueIsWithinDistance = false;
-let currentValueIsWithinDistance = false;
-
-currentValueIsWithinDistance = (distance > 10 && distance < 100);
 
 
+//let prevValueIsWithinDistance = false;
+//let currentValueIsWithinDistance = false;
+//currentValueIsWithinDistance = (distance > 10 && distance < 100);
+
+//Event listener is triggered when a body is detected
 bodies.addEventListener('bodiesDetected', (e) => {
     body = e.detail.bodies.getBodyAt(0)
     distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist))
-    currentValueIsWithinDistance = (distance > 20 && distance < 100)
+    //currentValueIsWithinDistance = (distance > 20 && distance < 100)
     document.getElementById('output').innerText = `Distance between wrists: ${distance}`
     body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist)
 })
 
 
-
-
-
-// draw the video, nose and eyes into the canvas
+// draw the video, left & right wrist onto the canvas
 function drawCameraIntoCanvas() {
 
     // draw the video element into the canvas
@@ -47,19 +53,23 @@ function drawCameraIntoCanvas() {
         // draw left wrist
         ctx.beginPath();
         ctx.arc(leftWrist.position.x, leftWrist.position.y, 10, 0, 2 * Math.PI);
-        ctx.fillStyle = 'white'
+        ctx.fillStyle = 'purple'
         ctx.fill()
 
         // draw right wrist
         ctx.beginPath();
         ctx.arc(rightWrist.position.x, rightWrist.position.y, 10, 0, 2 * Math.PI);
-        ctx.fillStyle = 'white'
+        ctx.fillStyle = 'red'
         ctx.fill()
     }
     requestAnimationFrame(drawCameraIntoCanvas)
 }
 
-/* ----- run ------ */
+
+
+//=====================================
+//              RUN
+//=====================================
 
 // start body detecting 
 bodies.start()

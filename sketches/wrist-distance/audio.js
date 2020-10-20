@@ -9,9 +9,13 @@ const audioElement = document.querySelector('audio');
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(audioContext.destination);
 
-// select our play button
+//======================================
+//             PLAY/PAUSE
+//======================================
+// select play button
 const playButton = document.querySelector('button');
 
+//note that the button's attribute is set on 'loop'
 playButton.addEventListener('click', function() {
 
     // check if context is in suspended state (autoplay policy)
@@ -30,3 +34,19 @@ playButton.addEventListener('click', function() {
         this.dataset.playing = 'false';
     }
 }, false);
+
+
+
+//========================================
+//                 GAIN
+//========================================
+
+//Work in progress...
+
+/*const gainNode = audioContext.createGain();
+track.connect(gainNode).connect(audioContext.destination);
+
+//need custom event?
+volumeControl.addEventListener('input', function() {
+    gainNode.gain.value = this.value;
+}, false);*/
