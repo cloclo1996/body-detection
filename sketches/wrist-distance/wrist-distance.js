@@ -1,12 +1,12 @@
 // @ts-nocheck
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
+    // Setup all nodes
+
+
 // load some sound
-const audioElement = document.querySelector('audio');
+const audioElement = document.querySelector('#zymbel');
 const track = audioCtx.createMediaElementSource(audioElement);
-
-
-
 // sets up a bodystream with configuration object
 const bodies = new BodyStream ({
       posenet: posenet,
@@ -17,6 +17,8 @@ const bodies = new BodyStream ({
     
 let body;
 let distance;
+let prevValueIsWithinDistance = false;
+let currentValueIsWithinDistance = false;
 
 bodies.addEventListener('bodiesDetected', (e) => {
     body = e.detail.bodies.getBodyAt(0)
@@ -25,30 +27,22 @@ bodies.addEventListener('bodiesDetected', (e) => {
     document.getElementById('output').innerText = `Distance between wrists: ${distance}`
     body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist)
 })
-let prevValueIsWithinDistance = false;
-let currentValueIsWithinDistance = false;
+
 
 currentValueIsWithinDistance = (distance > 10 && distance < 100);
 
-if(currentValueIsWithinDistance && prevValueIsWithinDistance){
-    console.log("I am playing!");
-    audioElement.play();
-}
-
-
-
-
-
-/* ----- setup ------ */
-
-
-
-const playButton = document.querySelector('button');
 //playButton.dataset.playing = false;
+/*setInterval(()=>{
+    if(audioCtx === 'suspended'){
+        audioCtx.resume();
+    }*/
+    if(currentValueIsWithinDistance && prevValueIsWithinDistance){
+        console.log("I am playing!");
+        audioElement.play();
+    }
+//
 
-
-
-
+/* ----- setup ------ 
 // volume
 const gainNode = audioCtx.createGain();
 
@@ -67,7 +61,7 @@ panner.pan.value = this.value;
 }, false);
 
 // connect our graph
-track.connect(gainNode).connect(panner).connect(audioCtx.destination);
+track.connect(gainNode).connect(panner).connect(audioCtx.destination);*/
 
 
 
@@ -75,15 +69,15 @@ track.connect(gainNode).connect(panner).connect(audioCtx.destination);
 
 
 // get elements
-//let video = document.getElementById("video");
-//let canvas = document.getElementById("canvas");
-//let ctx = canvas.getContext("2d");
+let video = document.getElementById("video");
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 
 // draw the video, nose and eyes into the canvas
-/*function drawCameraIntoCanvas() {
+function drawCameraIntoCanvas() {
 
     // draw the video element into the canvas
-    //ctx.drawImage(video, 0, 0, video.width, video.height);
+    ctx.drawImage(video, 0, 0, video.width, video.height);
     
     if (body) {
         // draw circle for left and right wrist
@@ -103,11 +97,17 @@ track.connect(gainNode).connect(panner).connect(audioCtx.destination);
         ctx.fill()
     }
     requestAnimationFrame(drawCameraIntoCanvas)
-}*/
+}
 
 /* ----- run ------ */
 
 // start body detecting 
 bodies.start()
 // draw video and body parts into canvas continously 
-//drawCameraIntoCanvas();
+drawCameraIntoCanvas();
+
+document.querySelector('button').addEventListener('click', function() {
+    audioCtx.resume().then(() => {
+      console.log('Playback resumed successfully');
+    });
+})
