@@ -9,6 +9,7 @@ const audioElement = document.querySelector('audio');
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(audioContext.destination);
 
+
 //======================================
 //             PLAY/PAUSE
 //======================================
@@ -42,11 +43,24 @@ playButton.addEventListener('click', function() {
 //========================================
 
 //Work in progress...
-
-/*const gainNode = audioContext.createGain();
+const gainNode = audioContext.createGain();
 track.connect(gainNode).connect(audioContext.destination);
 
+function volumeControl(){
+    for(let i=0; distanceArray.length>=5; i++){
+        distanceArray[i]/100;
+    }
+
+    if(distance[0]<distance[4]){
+        gainNode.gain.value++;
+    } else if (distance[0]>distance[4]){
+        gainNode.gain.value--;
+    }
+
+    console.log(gainNode.gain.value);
+}
+
 //need custom event?
-volumeControl.addEventListener('input', function() {
+/*volumeControl.addEventListener('input', function() {
     gainNode.gain.value = this.value;
 }, false);*/

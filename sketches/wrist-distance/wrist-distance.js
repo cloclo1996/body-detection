@@ -21,7 +21,7 @@ const bodies = new BodyStream ({
       architecture: modelArchitecture.MobileNetV1, 
       detectionType: detectionType.singleBody, 
       videoElement: document.getElementById('video'), 
-      samplingRate: 100})
+      samplingRate: 50})
     
 
 
@@ -29,10 +29,21 @@ const bodies = new BodyStream ({
 //let currentValueIsWithinDistance = false;
 //currentValueIsWithinDistance = (distance > 10 && distance < 100);
 
+let distanceArray = [];
+
 //Event listener is triggered when a body is detected
 bodies.addEventListener('bodiesDetected', (e) => {
     body = e.detail.bodies.getBodyAt(0)
     distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist))
+    distance = value_limit(distance, 0, 100);
+    
+    if(distanceArray.length >= 5){
+        distanceArray.pop();
+    }else{
+        distanceArray.push(distance);
+    }
+
+    volumeControl();
     //currentValueIsWithinDistance = (distance > 20 && distance < 100)
     document.getElementById('output').innerText = `Distance between wrists: ${distance}`
     body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist)
