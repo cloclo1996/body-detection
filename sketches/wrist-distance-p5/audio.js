@@ -1,25 +1,45 @@
-let mySound;
-function preload() {
-  soundFormats('mp3');
-  mySound = loadSound('zymbel');
-}
+let audio;
 
-function setup() {
-    let cnv = createCanvas(100, 100);
-    cnv.mousePressed(canvasPressed);
-    background(220);
-    text('tap here to play', 10, 20);
+function setup(){
+    audio = createAudio('zymbel.mp3');
 }
 
 
 //======================================
 //             PLAY/PAUSE
 //======================================
-function canvasPressed() {
-    // playing a sound file on a user gesture
-    // is equivalent to `userStartAudio()`
-    mySound.play();
+// select play button
+const playButton = document.querySelector('button');
 
-    //volume
-    mySound.setVolume(0.1);
-}
+//note that the button's attribute is set on 'loop'
+playButton.addEventListener('click', function() {
+
+    // check if context is in suspended state (autoplay policy)
+    if (audio.state === 'suspended') {
+        audio.resume();
+    }
+
+    // play or pause track depending on state
+    if (this.dataset.playing === 'false') {
+        console.log('I am playing');
+        audio.play();
+        audio.volume(1);
+        this.dataset.playing = 'true';
+    } else if (this.dataset.playing === 'true') {
+        console.log("I've been paused");
+        audio.pause();
+        this.dataset.playing = 'false';
+    }
+}, false);
+
+
+
+//========================================
+//                 GAIN
+//========================================
+
+/*function volumeControl(){
+    gainNode.gain.value = map(distance,0,500,0,1);
+    let volume = gainNode.gain.value;
+    console.log(volume);
+}*/

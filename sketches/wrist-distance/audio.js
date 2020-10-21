@@ -35,7 +35,6 @@ playButton.addEventListener('click', function() {
         this.dataset.playing = 'false';
     }
     
-    volumeControl();
 }, false);
 
 
@@ -45,8 +44,8 @@ playButton.addEventListener('click', function() {
 //========================================
 
 //Work in progress...
-const gainNode = audioContext.createGain();
-track.connect(gainNode).connect(audioContext.destination);
+//const gainNode = audioContext.createGain();
+//track.connect(gainNode).connect(audioContext.destination);
 
 function volumeControl(){
     for(let i=0; distanceArray.length>=5; i++){
@@ -54,12 +53,14 @@ function volumeControl(){
     }
 
     if(distanceArray[0]<distanceArray[4]){
-        gainNode.gain.value =+ 0.2;
+        audioElement.volume =+ 0.1;
     } else if (distanceArray[0]>distanceArray[4]){
-        gainNode.gain.value =- 0.2;
+        audioElement.volume =- 0.1;
+    }else{
+        audioElement.volume = audioElement.volume;
     }
 
-    console.log(gainNode.gain.value);
+    console.log(audioElement.volume);
 }
 
 //need custom event?
