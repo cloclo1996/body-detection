@@ -6,9 +6,6 @@
 let video = document.getElementById("video");
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
-
-
-
 //==========================================
 //                 BODY
 //==========================================
@@ -42,8 +39,10 @@ bodies.addEventListener('bodiesDetected', (e) => {
 
 
 // draw the video, left & right wrist onto the canvas
-function drawCameraIntoCanvas() {
-
+function draw() {
+    // draw the video element into the canvas
+    background(200);
+    
     // draw the video element into the canvas
     ctx.drawImage(video, 0, 0, video.width, video.height);
     
@@ -53,26 +52,19 @@ function drawCameraIntoCanvas() {
         const rightWrist = body.getBodyPart(bodyParts.rightWrist)
 
         // draw left wrist
-        ctx.beginPath();
-        ctx.arc(leftWrist.position.x, leftWrist.position.y, 10, 0, 2 * Math.PI);
-        ctx.fillStyle = 'purple'
-        ctx.fill()
+        let c = color('magenta');
+        fill(c);
+        noStroke();
+        circle(leftWrist.position.x, leftWrist.position.y, 10);
 
         // draw right wrist
-        ctx.beginPath();
-        ctx.arc(rightWrist.position.x, rightWrist.position.y, 10, 0, 2 * Math.PI);
-        ctx.fillStyle = 'red'
-        ctx.fill()
-
-        if(distanceArray.length >= 5){
-            distanceArray.pop();
-        }else{
-            distanceArray.push(distance);
-        }
+        c = color('red')
+        fill(c);
+        noStroke();
+        circle(rightWrist.position.x, rightWrist.position.y, 10);
     }
-    requestAnimationFrame(drawCameraIntoCanvas)
+    draw();
 }
-
 
 
 //=====================================
@@ -81,5 +73,3 @@ function drawCameraIntoCanvas() {
 
 // start body detecting 
 bodies.start()
-// draw video and body parts into canvas continously 
-drawCameraIntoCanvas();

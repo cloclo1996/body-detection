@@ -34,6 +34,8 @@ playButton.addEventListener('click', function() {
         audioElement.pause();
         this.dataset.playing = 'false';
     }
+    
+    volumeControl();
 }, false);
 
 
@@ -51,10 +53,10 @@ function volumeControl(){
         distanceArray[i]/100;
     }
 
-    if(distance[0]<distance[4]){
-        gainNode.gain.value++;
-    } else if (distance[0]>distance[4]){
-        gainNode.gain.value--;
+    if(distanceArray[0]<distanceArray[4]){
+        gainNode.gain.value =+ 0.2;
+    } else if (distanceArray[0]>distanceArray[4]){
+        gainNode.gain.value =- 0.2;
     }
 
     console.log(gainNode.gain.value);
