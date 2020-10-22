@@ -11,7 +11,7 @@ let ctx = canvas.getContext("2d");
 //==========================================
 let body;
 let distance; //distance between wrists
-//let distanceArray = [];
+let distanceArray = [];
 let vol;
 
 // sets up a bodystream with configuration object
@@ -27,9 +27,10 @@ const bodies = new BodyStream ({
 bodies.addEventListener('bodiesDetected', (e) => {
     body = e.detail.bodies.getBodyAt(0)
     distance = round(body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist))
-    let newDistance = value_limit(distance,0,200);
     document.getElementById('output').innerText = `Distance between wrists: ${newDistance}`
-    vol = map(newDistance,0,200,0,1,true);
+
+    let newDistance = value_limit(distance,0,200);
+    vol = map(newDistance,0,200,0,1);
     audio.volume(isFinite(vol));
     console.log(audio.volume());
     body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist)
@@ -49,18 +50,16 @@ function draw(){
         const leftWrist = body.getBodyPart(bodyParts.leftWrist)
         const rightWrist = body.getBodyPart(bodyParts.rightWrist)
 
-        loop(()=>{
-            // draw left wrist
-            let c = color('magenta');
-            fill(c);
-            ellipse(leftWrist.position.x, leftWrist.position.y, 10,10);
+        // draw left wrist
+        let c = color('magenta');
+        fill(c);
+        ellipse(leftWrist.position.x, leftWrist.position.y, 10,10);
 
 
-            // draw right wrist
-            c = color('red');
-            fill(c);
-            ellipse(rightWrist.position.x, rightWrist.position.y, 10, 10);
-        })
+        // draw right wrist
+        c = color('red');
+        fill(c);
+        ellipse(rightWrist.position.x, rightWrist.position.y, 10, 10);
     }    
 }
 

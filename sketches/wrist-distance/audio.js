@@ -44,26 +44,32 @@ playButton.addEventListener('click', function() {
 //========================================
 
 //Work in progress...
-//const gainNode = audioContext.createGain();
-//track.connect(gainNode).connect(audioContext.destination);
+const gainNode = audioContext.createGain();
+track.connect(gainNode).connect(audioContext.destination);
 
 function volumeControl(){
-    for(let i=0; distanceArray.length>=5; i++){
-        distanceArray[i]/100;
+    let total = 0;
+    for(var i = 0; i < distanceArray.length; i++) {
+        total += distanceArray[i];
     }
 
-    if(distanceArray[0]<distanceArray[4]){
-        audioElement.volume =+ 0.1;
-    } else if (distanceArray[0]>distanceArray[4]){
-        audioElement.volume =- 0.1;
-    }else{
-        audioElement.volume = audioElement.volume;
+    //if we are at the end of the array....
+    if(i >= distanceArray.length){
+        i = 0
     }
 
-    console.log(audioElement.volume);
+    //create an average
+    let average = parseFloat(total/distanceArray.length).toFixed(2);
+    
+    if(average>1){
+        average = 1;
+    }
+    
+    if(average < 0){
+        average = 0;
+    }
+
+    console.log(average);
+    gainNode.gain.value = parseFloat(average).toFixed(2);
+    console.log(gainNode.gain.value);
 }
-
-//need custom event?
-/*volumeControl.addEventListener('input', function() {
-    gainNode.gain.value = this.value;
-}, false);*/
