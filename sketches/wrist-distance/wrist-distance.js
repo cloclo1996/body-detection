@@ -28,12 +28,13 @@ const bodies = new BodyStream ({
 bodies.addEventListener('bodiesDetected', (e) => {
     body = e.detail.bodies.getBodyAt(0);
     
-    distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.rightShoulder, bodyParts.rightHip))
+    distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.rightWrist, bodyParts.leftWrist))
     
 
     //distance is limited between 0 and 100. So that we can use it later for volumeControl().
     let newDistance = value_limit(distance, 0, 500);
     distance = map2(newDistance,0,500,0,1);
+    distance2 = map2(newDistance,0,500,1,2);
     //console.log(distance);
     //an array of with 5 distances is used in volumeControl() 
     //to detect an increase or decrease of distance. 
@@ -42,6 +43,10 @@ bodies.addEventListener('bodiesDetected', (e) => {
         distanceArray.shift();
     }
 
+    if(distanceArray2.length >= 5){
+        distanceArray2.shift();
+    }
+    distanceArray2.push(distance2)
     distanceArray.push(distance);
 
     //console.log(distanceArray);
@@ -49,12 +54,13 @@ bodies.addEventListener('bodiesDetected', (e) => {
     //console.log('a');
 
     volumeControl();
+    pitchControl();
 
     //console.log('b');
 
 
     document.getElementById('output').innerText = `Distance between wrists: ${distance}`
-    body.getDistanceBetweenBodyParts(bodyParts.rightShoulder, bodyParts.rightHip)
+    body.getDistanceBetweenBodyParts(bodyParts.rightWrist, bodyParts.leftWrist)
 })
 
 
@@ -66,8 +72,8 @@ function drawCameraIntoCanvas() {
     
     if (body) {
         // draw circle for left and right wrist
-        const rightShoulder = body.getBodyPart(bodyParts.rightShoulder)
-        const rightHip = body.getBodyPart(bodyParts.rightHip)
+        const rightShoulder = body.getBodyPart(bodyParts.rightWrist)
+        const rightHip = body.getBodyPart(bodyParts.leftWrist)
 
         // draw left wrist
         ctx.beginPath();

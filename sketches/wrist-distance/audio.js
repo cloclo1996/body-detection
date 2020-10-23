@@ -10,6 +10,7 @@ const track = audioContext.createMediaElementSource(audioElement);
 track.connect(audioContext.destination);
 
 let distanceArray = [];
+let distanceArray2 = [];
 
 
 //======================================
@@ -47,28 +48,62 @@ playButton.addEventListener('click', function() {
 
 function volumeControl(){
     let total = 0;
+    
     for(var i = 0; i < distanceArray.length; i++) {
         total += distanceArray[i];
     }
 
+
+
     //if we are at the end of the array....
     if(i >= distanceArray.length){
-        i = 0
+        i = 0;
     }
 
+
+
     //create an average
-    let average = parseFloat(total/distanceArray.length).toFixed(2);
+    let average1 = parseFloat(total/distanceArray.length).toFixed(2);
     
-    if(average>1){
-        average = 1;
+    
+    if(average1 > 1){
+        average1 = 1;
     }
     
-    if(average < 0.2){
-        average = 0;
+    if(average1 < 0.2){
+        average1 = 0;
     }
+
+
+
+
     
     //console.log(average);
-    document.getElementById("vignette").style.boxShadow = `inset 0px ${average*300}px 85px rgba(0,0,0,${average})`;
-    audioElement.volume = parseFloat(average).toFixed(2)
+    //document.getElementById("vignette").style.boxShadow = `inset 0px ${average*300}px 85px rgba(0,0,0,${average})`;
+    audioElement.volume = parseFloat(average1).toFixed(2)
+
     console.log(audioElement.volume);
+}
+
+function pitchControl(){
+    let total2 = 0;
+    for(var i2 = 0; i2 < distanceArray2.length; i2++) {
+        total2 += distanceArray2[i2];
+    }
+
+    if(i2 >= distanceArray2.length){
+        i2=0;
+    }
+
+    let average2 = parseFloat(total2/distanceArray2.length).toFixed(2);
+
+    if(average2 > 1){
+        average2 = 1;
+    }
+    
+    if(average2 < 0.2){
+        average2 = 0;
+    }
+    
+    audioElement.playbackRate = parseFloat(average2).toFixed(2);
 }
