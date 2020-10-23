@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Wrist distance</title>
-  <audio src="zymbel.mp3" type="audio/mpeg" loop id="zymbel"></audio>
+  <audio src="harsh.mp3" type="audio/mpeg" loop id="zymbel"></audio>
 
   <!-- body detection library-->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
   <script src="https://unpkg.com/@reactivex/rxjs@6.6.3/dist/global/rxjs.umd.js"></script>
   <script src="../../lib/bodydetection.js"></script>
+  
 
   
 </head>
@@ -19,6 +20,8 @@
   <video id="video" width="640" height="480" autoplay style="display: none"></video>
   <div id="output"></div>
   <button data-playing="false" role="switch" aria-checked="false" autoplay><span>Play/Pause</span></button>
+  <!--Tone.js
+  <script src="https://unpkg.com/tone@13.8.25/build/Tone.js"></script>-->
   <script src="audio.js"></script>
   <!-- p5.js--> 
   <script src="../../lib/p5.js"></script>

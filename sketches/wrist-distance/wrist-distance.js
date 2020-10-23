@@ -13,7 +13,6 @@ let ctx = canvas.getContext("2d");
 //==========================================
 let body;
 let distance; //distance between wrists
-let distanceArray = [];
 
 // sets up a bodystream with configuration object
 const bodies = new BodyStream ({
@@ -21,14 +20,15 @@ const bodies = new BodyStream ({
       architecture: modelArchitecture.MobileNetV1, 
       detectionType: detectionType.singleBody, 
       videoElement: document.getElementById('video'), 
-      samplingRate: 100})
+      samplingRate: 250})
 
 
 
 //Event listener is triggered when a body is detected
 bodies.addEventListener('bodiesDetected', (e) => {
-    body = e.detail.bodies.getBodyAt(0)
-    distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist))
+    body = e.detail.bodies.getBodyAt(0);
+    
+    distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.rightShoulder, bodyParts.rightKnee))
     
     //=======================================
     //        !!PROBLEM HERE!!
@@ -65,7 +65,7 @@ bodies.addEventListener('bodiesDetected', (e) => {
 
 
     document.getElementById('output').innerText = `Distance between wrists: ${distance}`
-    body.getDistanceBetweenBodyParts(bodyParts.leftWrist, bodyParts.rightWrist)
+    body.getDistanceBetweenBodyParts(bodyParts.rightShoulder, bodyParts.rightKnee)
 })
 
 
@@ -77,18 +77,18 @@ function drawCameraIntoCanvas() {
     
     if (body) {
         // draw circle for left and right wrist
-        const leftWrist = body.getBodyPart(bodyParts.leftWrist)
-        const rightWrist = body.getBodyPart(bodyParts.rightWrist)
+        const rightShoulder = body.getBodyPart(bodyParts.rightShoulder)
+        const rightKnee = body.getBodyPart(bodyParts.rightKnee)
 
         // draw left wrist
         ctx.beginPath();
-        ctx.arc(leftWrist.position.x, leftWrist.position.y, 10, 0, 2 * Math.PI);
+        ctx.arc(rightShoulder.position.x, rightShoulder.position.y, 10, 0, 2 * Math.PI);
         ctx.fillStyle = 'purple'
         ctx.fill()
 
         // draw right wrist
         ctx.beginPath();
-        ctx.arc(rightWrist.position.x, rightWrist.position.y, 10, 0, 2 * Math.PI);
+        ctx.arc(rightKnee.position.x, rightKnee.position.y, 10, 0, 2 * Math.PI);
         ctx.fillStyle = 'red'
         ctx.fill()
     }

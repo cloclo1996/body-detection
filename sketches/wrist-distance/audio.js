@@ -9,6 +9,8 @@ const audioElement = document.querySelector('audio');
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(audioContext.destination);
 
+let distanceArray = [];
+
 
 //======================================
 //             PLAY/PAUSE
@@ -40,12 +42,8 @@ playButton.addEventListener('click', function() {
 
 
 //========================================
-//                 GAIN
+//                 VOLUME
 //========================================
-
-//Work in progress...
-const gainNode = audioContext.createGain();
-track.connect(gainNode).connect(audioContext.destination);
 
 function volumeControl(){
     let total = 0;
@@ -68,8 +66,8 @@ function volumeControl(){
     if(average < 0){
         average = 0;
     }
-
-    console.log(average);
-    gainNode.gain.value = parseFloat(average).toFixed(2);
-    console.log(gainNode.gain.value);
+    
+    //console.log(average);
+    audioElement.volume = parseFloat(average).toFixed(2)
+    console.log(audioElement.volume);
 }
