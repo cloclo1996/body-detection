@@ -63,11 +63,12 @@ function volumeControl(){
         average = 1;
     }
     
-    if(average < 0){
+    if(average < 0.2){
         average = 0;
     }
     
     //console.log(average);
+    document.getElementById("vignette").style.boxShadow = `inset 0px ${average*300}px 85px rgba(0,0,0,${average})`;
     audioElement.volume = parseFloat(average).toFixed(2)
     console.log(audioElement.volume);
 }

@@ -28,18 +28,7 @@ const bodies = new BodyStream ({
 bodies.addEventListener('bodiesDetected', (e) => {
     body = e.detail.bodies.getBodyAt(0);
     
-    distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.rightShoulder, bodyParts.rightKnee))
-    
-    //=======================================
-    //        !!PROBLEM HERE!!
-    //         VOLUME CONTROL
-    //=======================================
-
-    /*We have been trying to run the function 'volumeControl()' from the audio.js file here
-    in this event listener. So every time the distance is measured, we can use its value in
-    volumeControl(). But this function seems to freeze the body detection all together.
-    How can we prevent this? */
-
+    distance = Math.round(body.getDistanceBetweenBodyParts(bodyParts.rightShoulder, bodyParts.rightHip))
     
 
     //distance is limited between 0 and 100. So that we can use it later for volumeControl().
@@ -65,7 +54,7 @@ bodies.addEventListener('bodiesDetected', (e) => {
 
 
     document.getElementById('output').innerText = `Distance between wrists: ${distance}`
-    body.getDistanceBetweenBodyParts(bodyParts.rightShoulder, bodyParts.rightKnee)
+    body.getDistanceBetweenBodyParts(bodyParts.rightShoulder, bodyParts.rightHip)
 })
 
 
@@ -78,7 +67,7 @@ function drawCameraIntoCanvas() {
     if (body) {
         // draw circle for left and right wrist
         const rightShoulder = body.getBodyPart(bodyParts.rightShoulder)
-        const rightKnee = body.getBodyPart(bodyParts.rightKnee)
+        const rightHip = body.getBodyPart(bodyParts.rightHip)
 
         // draw left wrist
         ctx.beginPath();
@@ -88,7 +77,7 @@ function drawCameraIntoCanvas() {
 
         // draw right wrist
         ctx.beginPath();
-        ctx.arc(rightKnee.position.x, rightKnee.position.y, 10, 0, 2 * Math.PI);
+        ctx.arc(rightHip.position.x, rightHip.position.y, 10, 0, 2 * Math.PI);
         ctx.fillStyle = 'red'
         ctx.fill()
     }
