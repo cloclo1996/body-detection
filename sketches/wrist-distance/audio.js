@@ -1,3 +1,5 @@
+//const { StereoPannerNode } = require("standardized-audio-context");
+
 // for legacy browsers
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();  
@@ -9,9 +11,12 @@ const audioElement = document.querySelector('audio');
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(audioContext.destination);
 
+const gainNode = audioContext.createGain();
+let panner = audioContext.createStereoPanner();
+
 let distanceArray = [];
 let distanceArray2 = [];
-
+let noseToPannerArray = [];
 
 //======================================
 //             PLAY/PAUSE
@@ -65,24 +70,43 @@ function volumeControl(){
     //create an average
     let average1 = parseFloat(total/distanceArray.length).toFixed(2);
     
-    
-    if(average1 > 1){
+    if(average1 > (panValueVol + 0.2)){
+        average1 = 0.01;
+    }
+
+    /*if(average1 >= (panValueVol + 0.2)){
+        average1 = average1 + 0.02;
+    }*/
+
+    else if(((panValueVol - 0.2) <= average1) && (average1 >= (panValueVol + 0.2))){
         average1 = 1;
     }
-    
-    if(average1 < 0.2){
+
+    /*if((average1 <= panValue) && (average1 >= panValue)){
         average1 = 0;
+    }*/
+
+
+    /*if(average1 <= (panValueVol - 0.2)){
+        average1 = average1 - 0.02;
+    }*/
+
+    else if(average1 < (panValueVol - 0.2)){
+        average1 = 0.01;
     }
 
-
-
+    else{
+        average1 = 0.01;
+    }
 
     
-    //console.log(average);
-    //document.getElementById("vignette").style.boxShadow = `inset 0px ${average*300}px 85px rgba(0,0,0,${average})`;
-    audioElement.volume = parseFloat(average1).toFixed(2)
+    track.connect(gainNode);
+    gainNode.gain.value = average1;
+    gainNode.connect(audioContext.destination);
+    console.log(`volume: ${gainNode.gain.value}`);
+    //audioElement.volume = parseFloat(average1).toFixed(2)
 
-    console.log(audioElement.volume);
+    //console.log(audioElement.volume);
 }
 
 function pitchControl(){
@@ -95,10 +119,14 @@ function pitchControl(){
         i2=0;
     }
 
-    let average2 = parseFloat(total2/distanceArray2.length).toFixed(2);
+    let average2 = total2/distanceArray2.length;
 
-    if(average2 > 1){
-        average2 = 1;
+    if(average2 > 2){
+        average2 = 2;
+    }
+
+    if(0.8 > average2 > 1.2){
+        average = 1;
     }
     
     if(average2 < 0.2){
@@ -106,4 +134,53 @@ function pitchControl(){
     }
     
     audioElement.playbackRate = parseFloat(average2).toFixed(2);
+}
+
+function setNewPan(){
+    average3 = 0;
+    panValue = getRandomArbitrary(0,500);
+}
+
+function pannerControl(){
+    let total = 0;
+    for(var i=0; i<noseToPannerArray.length; i++){
+        total += noseToPannerArray[i];
+    }
+
+    if(i >= noseToPannerArray.length){
+        i=0;
+    }
+
+    let average3 = total/noseToPannerArray.length;
+
+    //make average needs to match panValue
+    if(average3 < pannerValue){
+        average3 = -1;
+    }
+
+    /*if(average3 >= (panValue + 0.2)){
+        average3 = average3 + 0.2;
+    }*/
+
+    else if(average3 >= (pannerValue - 0.3) && average3 <= (pannerValue + 0.3)){
+        setInterval(setNewPan(),5000);
+    }
+
+    /*if((average1 <= panValue) && (average1 >= panValue)){
+        average1 = 0;
+    }*/
+
+
+    /*if(average3 <= (panValue - 0.2)){
+        average3 = average3 - 0.2;
+    }*/
+
+    else if(average3 > pannerValue){
+        average3 = 1;
+    }
+
+    track.connect(panner);
+    panner.pan.value = average3;
+    panner.connect(audioContext.destination);
+    console.log(`panner: ${panner.pan.value}`);
 }

@@ -13,6 +13,13 @@ let ctx = canvas.getContext("2d");
 //==========================================
 let body;
 let distance; //distance between wrists
+let nose;
+let noseX;
+let coreX;
+//let panValue = getRandomArbitrary(-1,1);
+let panValue = getRandomArbitrary(0,500);
+let pannerValue;
+let panValueVol;
 
 // sets up a bodystream with configuration object
 const bodies = new BodyStream ({
@@ -32,29 +39,78 @@ bodies.addEventListener('bodiesDetected', (e) => {
     
 
     //distance is limited between 0 and 100. So that we can use it later for volumeControl().
-    let newDistance = value_limit(distance, 0, 500);
-    distance = map2(newDistance,0,500,0,1);
-    distance2 = map2(newDistance,0,500,1,2);
-    //console.log(distance);
-    //an array of with 5 distances is used in volumeControl() 
+    //let newDistance = value_limit(distance, 0, 500);
+    //distance = map2(newDistance,0,500,0,1);
+    //let distance2 = map2(newDistance,0,500,0,2);
+
+        //get right & left shoulder
+        let rightShoulder = body.getBodyPart(bodyParts.rightShoulder);
+        let leftShoulder = body.getBodyPart(bodyParts.leftShoulder);
+
+
+
+        //get core X and Y position
+        let coreY = (rightShoulder.position.y + leftShoulder.position.y)/2
+        coreX = (rightShoulder.position.x + leftShoulder.position.x)/2;
+
+        //remap values to use them later
+        let coreXVolume =  map2(coreX,0,500,0,1);
+        panValueVol = map2(panValue,0,500,0,1);
+        let coreYPitch = map2(coreY,0,500,0,2);
+        let coreXPanner = map2(coreX,0,500,-1,1);
+        pannerValue = map2(panValue,0,500,-1,1);
+
+
     //to detect an increase or decrease of distance. 
-    if(distanceArray.length >= 5){
+    if(distanceArray.length >= 10){
         //once the array is completely populated, a value is removed.
         distanceArray.shift();
     }
 
-    if(distanceArray2.length >= 5){
+    if(distanceArray2.length >= 10){
         distanceArray2.shift();
     }
-    distanceArray2.push(distance2)
-    distanceArray.push(distance);
+
+    if(noseToPannerArray.length >= 10){
+        noseToPannerArray.shift();
+    }
+    
+    //volume
+    distanceArray.push(coreXVolume);
+    
+    //pitch
+    distanceArray2.push(coreYPitch)
+   
+
+    //get the nose
+    //nose = body.getBodyPart(bodyParts.nose);
+    //noseX = map2(nose.position.x, 0,800,1,-1);
+
+    //panner
+    noseToPannerArray.push(coreXPanner);
+
+    
 
     //console.log(distanceArray);
 
     //console.log('a');
 
-    volumeControl();
-    pitchControl();
+    if((distance < 60) && (coreY > 250)){
+        //console.log('I am playing');
+        console.log(coreY)
+        audioElement.play();
+        pannerControl();
+        volumeControl();
+        pitchControl();  
+    }
+
+
+
+    if((distance >= 60) || (coreY <= 250)){
+        //console.log("I've been paused");
+        audioElement.pause();
+    }
+    
 
     //console.log('b');
 

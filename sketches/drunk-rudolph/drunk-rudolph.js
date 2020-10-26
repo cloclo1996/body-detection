@@ -15,7 +15,7 @@ const bodies = new BodyStream ({
       videoElement: document.getElementById('video'), 
       samplingRate: 250})
 
-let body
+let body;
 
 // when a body is detected get body data
 bodies.addEventListener('bodiesDetected', (e) => {
